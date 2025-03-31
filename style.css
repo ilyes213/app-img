@@ -489,4 +489,28 @@ button:active {
         flex-direction: column;
         gap: 10px;
     }
+}
+
+.policy-content {
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.policy-content section {
+    margin-bottom: 25px;
+}
+
+.policy-content h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.policy-content ul {
+    padding-right: 20px;
+    margin: 10px 0;
+}
+
+.policy-content li {
+    margin-bottom: 8px;
 } 
