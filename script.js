@@ -286,9 +286,6 @@ async function shareOnFacebook() {
         const template = document.getElementById('templateSelect').value;
         const name = document.getElementById('nameInput').value;
         
-        // تحويل الكانفاس إلى صورة
-        const imageUrl = canvas.toDataURL('image/png');
-        
         // إنشاء نص المشاركة حسب نوع البطاقة
         let shareText;
         switch(template) {
@@ -307,22 +304,22 @@ async function shareOnFacebook() {
         }
         
         // إضافة دعوة للمشاركة
-        shareText += "\n🎨 صممت هذه البطاقة في ثوانٍ معدودة!";
-        shareText += "\n👈 يمكنكم تصميم بطاقاتكم الخاصة مجاناً عبر الرابط:";
+        shareText += "\n🎨 صمم بطاقتك الخاصة مجاناً:";
         shareText += "\nhttps://img-edite.netlify.app/";
-        
-        // إنشاء رابط مشاركة فيسبوك مع الصورة
-        const fbShareUrl = `https://www.facebook.com/dialog/feed?` +
-            `app_id=1807101829859344` + // قم بتغيير هذا الرقم بـ App ID الخاص بك
-            `&display=popup` +
-            `&link=${encodeURIComponent('https://img-edite.netlify.app/')}` +
-            `&picture=${encodeURIComponent(imageUrl)}` +
-            `&caption=${encodeURIComponent('صانع البطاقات السحري')}` +
-            `&description=${encodeURIComponent(shareText)}` +
-            `&redirect_uri=${encodeURIComponent(window.location.href)}`;
+
+        // إنشاء رابط مشاركة فيسبوك
+        const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?` +
+            `u=${encodeURIComponent('https://img-edite.netlify.app/')}` +
+            `&quote=${encodeURIComponent(shareText)}`;
         
         // فتح نافذة مشاركة فيسبوك
-        window.open(fbShareUrl, 'facebook-share', 'width=580,height=296');
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            // للأجهزة المحمولة
+            window.location.href = fbShareUrl;
+        } else {
+            // للحواسيب
+            window.open(fbShareUrl, 'facebook-share', 'width=580,height=296');
+        }
         
     } catch (error) {
         console.error('خطأ في المشاركة:', error);
