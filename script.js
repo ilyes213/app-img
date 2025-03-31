@@ -261,10 +261,12 @@ async function generateCard() {
         helpers.drawText(textConfig, canvas.height/2 - 60);
         
         downloadBtn.style.display = 'block';
+        document.getElementById('shareBtn').style.display = 'block';
     } catch (error) {
         console.error('خطأ:', error);
         alert('حدث خطأ أثناء إنشاء البطاقة. الرجاء المحاولة مرة أخرى.');
         canvas.style.opacity = '1';
+        document.getElementById('shareBtn').style.display = 'none';
     }
 }
 
@@ -277,14 +279,21 @@ function downloadCard() {
     link.click();
 }
 
-// إضافة دالة مشاركة على فيسبوك
-function shareOnFacebook() {
-    // الحصول على رابط الصفحة الحالية
-    const url = window.location.href;
-    
-    // فتح نافذة مشاركة فيسبوك
-    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    window.open(shareUrl, 'facebook-share', 'width=580,height=296');
+// تحديث دالة مشاركة فيسبوك
+async function shareOnFacebook() {
+    try {
+        // تحويل الكانفاس إلى صورة
+        const imageData = canvas.toDataURL('image/png');
+        
+        // إنشاء رابط مشاركة فيسبوك
+        const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&picture=${encodeURIComponent(imageData)}`;
+        
+        // فتح نافذة مشاركة فيسبوك
+        window.open(shareUrl, 'facebook-share', 'width=580,height=296');
+    } catch (error) {
+        console.error('خطأ في المشاركة:', error);
+        alert('حدث خطأ أثناء محاولة المشاركة. الرجاء المحاولة مرة أخرى.');
+    }
 }
 
 // محتوى الصفحات المنبثقة
