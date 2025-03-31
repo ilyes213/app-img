@@ -286,65 +286,74 @@ async function shareOnFacebook() {
         const template = document.getElementById('templateSelect').value;
         const name = document.getElementById('nameInput').value;
         
-        // تحويل الكانفاس إلى صورة base64
-        const imageData = canvas.toDataURL('image/png');
+        // تحويل الكانفاس إلى صورة
+        const imageUrl = canvas.toDataURL('image/png');
         
         // إنشاء نص المشاركة حسب نوع البطاقة
         let shareText;
         switch(template) {
             case 'promotion':
-                shareText = `✨ شاهدوا بطاقة العيد التي صممتها!\n`;
-                shareText += `🎉 بطاقة تهنئة خاصة لـ ${name}\n`;
+                shareText = `🌙 بطاقة تهنئة بالعيد صممتها لـ ${name}\n`;
                 break;
             case 'birthday':
-                shareText = `✨ شاهدوا بطاقة عيد الميلاد التي صممتها!\n`;
-                shareText += `🎂 بطاقة تهنئة خاصة لـ ${name}\n`;
+                shareText = `🎂 بطاقة عيد ميلاد صممتها لـ ${name}\n`;
                 break;
             case 'graduation':
-                shareText = `✨ شاهدوا بطاقة التخرج التي صممتها!\n`;
-                shareText += `🎓 بطاقة تهنئة خاصة لـ ${name}\n`;
+                shareText = `🎓 بطاقة تخرج صممتها لـ ${name}\n`;
                 break;
         }
         
-        // إضافة دعوة للمشاركة
-        shareText += "\n🎨 صمم بطاقتك الخاصة مجاناً عبر:\n";
+        // إضافة رابط الموقع
+        shareText += "\n✨ صمم بطاقتك الخاصة مجاناً:\n";
         shareText += "https://img-edite.netlify.app/";
 
-        // تحويل الصورة إلى Blob
-        const response = await fetch(imageData);
-        const blob = await response.blob();
-        
-        // إنشاء ملف من الـ Blob
-        const file = new File([blob], 'card.png', { type: 'image/png' });
+        // إضافة Facebook SDK إذا لم يكن موجوداً
+        if (!window.FB) {
+            await new Promise((resolve) => {
+                const script = document.createElement('script');
+                script.src = 'https://connect.facebook.net/ar_AR/sdk.js';
+                script.async = true;
+                script.defer = true;
+                script.crossorigin = 'anonymous';
+                script.onload = resolve;
+                document.head.appendChild(script);
+                
+                window.fbAsyncInit = function() {
+                    FB.init({
+                        appId: '1807101829859344',
+                        version: 'v18.0',
+                        xfbml: true
+                    });
+                };
+            });
+        }
 
-        // مشاركة الصورة والنص باستخدام Web Share API إذا كان متوفراً
-        if (navigator.share && navigator.canShare({ files: [file] })) {
-            try {
-                await navigator.share({
-                    files: [file],
-                    title: 'صانع البطاقات السحري',
-                    text: shareText,
-                    url: 'https://img-edite.netlify.app/'
-                });
-                return;
-            } catch (shareError) {
-                console.log('تم إلغاء المشاركة أو حدث خطأ:', shareError);
+        // استخدام Facebook SDK للمشاركة
+        FB.ui({
+            method: 'feed',
+            link: 'https://img-edite.netlify.app/',
+            picture: imageUrl,
+            caption: 'صانع البطاقات السحري',
+            description: shareText,
+            hashtag: '#صانع_البطاقات_السحري'
+        }, function(response) {
+            if (response && !response.error_message) {
+                alert('تمت المشاركة بنجاح! 🎉');
+            } else {
+                // إذا فشلت المشاركة المباشرة، نستخدم الطريقة البديلة
+                const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?` +
+                    `u=${encodeURIComponent('https://img-edite.netlify.app/')}` +
+                    `&quote=${encodeURIComponent(shareText)}` +
+                    `&hashtag=${encodeURIComponent('#صانع_البطاقات_السحري')}`;
+
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    window.location.href = fbShareUrl;
+                } else {
+                    window.open(fbShareUrl, 'facebook-share', 'width=580,height=296');
+                }
             }
-        }
+        });
 
-        // إذا لم يكن Web Share API متوفراً، نستخدم Facebook Share Dialog
-        const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?` +
-            `u=${encodeURIComponent('https://img-edite.netlify.app/')}` +
-            `&quote=${encodeURIComponent(shareText)}` +
-            `&hashtag=${encodeURIComponent('#صانع_البطاقات_السحري')}`;
-        
-        // فتح نافذة مشاركة فيسبوك
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            window.location.href = fbShareUrl;
-        } else {
-            window.open(fbShareUrl, 'facebook-share', 'width=580,height=296');
-        }
-        
     } catch (error) {
         console.error('خطأ في المشاركة:', error);
         alert('عذراً، حدث خطأ أثناء محاولة المشاركة. يرجى المحاولة مرة أخرى.');
