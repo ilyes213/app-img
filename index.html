@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 صانع البطاقات السحري | صمم بطاقتك في ثوانٍ</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- إضافة خطوط جوجل العربية -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- إضافة Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- إضافة نافذة منبثقة للصفحات -->
+    <div id="pageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <!-- سيتم تحديث المحتوى ديناميكياً -->
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                 <h1><i class="fas fa-magic"></i> صانع البطاقات السحري</h1>
+            </div>
+            <p class="subtitle">أنشئ بطاقات تهنئة مميزة في ثوانٍ ✨</p>
+        </header>
+
+        <main class="main-content">
+            <div class="card-creator">
+                <div class="input-group">
+                    <label for="nameInput">
+                        <i class="fas fa-user"></i> الاسم
+                    </label>
+                    <input type="text" id="nameInput" placeholder="أدخل اسمك هنا" autocomplete="off">
+                </div>
+
+                <div class="input-group">
+                    <label for="templateSelect">
+                        <i class="fas fa-palette"></i> نوع البطاقة
+                    </label>
+                    <select id="templateSelect">
+                        <option value="promotion">مبروك عيدك</option>
+                        <option value="birthday">عيد ميلاد سعيد</option>
+                        <option value="graduation">تهنئة بالتخرج</option>
+                    </select>
+                </div>
+
+                <button class="create-btn" onclick="generateCard()">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                    إنشاء البطاقة
+                </button>
+            </div>
+
+            <div class="card-preview">
+                <canvas id="cardCanvas"></canvas>
+                <div class="actions">
+                    <button id="downloadBtn" onclick="downloadCard()" style="display: none;">
+                        <i class="fas fa-download"></i>
+                        تحميل البطاقة
+                    </button>
+                    <button class="share-btn" onclick="shareOnFacebook()">
+                        <i class="fab fa-facebook"></i>
+                        مشاركة على فيسبوك
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <section class="testimonials">
+            <h2>آراء المستخدمين</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <img src="https://i.pravatar.cc/150?img=1" alt="مستخدم">
+                    <p>"تطبيق رائع! سهل الاستخدام وتصاميم جميلة"</p>
+                    <h4>أحمد محمد</h4>
+                </div>
+                <div class="testimonial-card">
+                    <img src="https://i.pravatar.cc/150?img=2" alt="مستخدم">
+                    <p>"أفضل موقع لتصميم البطاقات استخدمته"</p>
+                    <h4>سارة أحمد</h4>
+                </div>
+            </div>
+        </section>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                
+                <p>صنع بكل ❤️ للمناسبات السعيدة</p>
+                <div class="footer-links">
+                    <button onclick="showPage('privacy')" class="footer-link">سياسة الخصوصية</button>
+                    <button onclick="showPage('terms')" class="footer-link">شروط الاستخدام</button>
+                    <button onclick="showPage('about')" class="footer-link">من نحن</button>
+                    <button onclick="showPage('contact')" class="footer-link">اتصل بنا</button>
+                </div>
+                <button class="scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+            </div>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
