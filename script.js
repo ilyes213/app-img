@@ -279,20 +279,40 @@ function downloadCard() {
     link.click();
 }
 
-// تحديث دالة مشاركة فيسبوك
+// تحديث دالة المشاركة عبر فيسبوك
 async function shareOnFacebook() {
     try {
-        // تحويل الكانفاس إلى صورة
-        const imageData = canvas.toDataURL('image/png');
+        // الحصول على نوع البطاقة والاسم
+        const template = document.getElementById('templateSelect').value;
+        const name = document.getElementById('nameInput').value;
+        
+        // إنشاء نص المشاركة حسب نوع البطاقة
+        let shareText;
+        switch(template) {
+            case 'promotion':
+                shareText = `🌙 شاهدوا بطاقة تهنئة العيد الجميلة التي صممتها لـ ${name}\n`;
+                break;
+            case 'birthday':
+                shareText = `🎂 شاهدوا بطاقة عيد الميلاد الجميلة التي صممتها لـ ${name}\n`;
+                break;
+            case 'graduation':
+                shareText = `🎓 شاهدوا بطاقة التخرج الجميلة التي صممتها لـ ${name}\n`;
+                break;
+        }
+        
+        // إضافة رابط الموقع للمشاركة
+        shareText += "\n✨ يمكنكم تصميم بطاقاتكم الخاصة مجاناً عبر الرابط:\n";
+        shareText += "https://img-edite.netlify.app/";
         
         // إنشاء رابط مشاركة فيسبوك
-        const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&picture=${encodeURIComponent(imageData)}`;
+        const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://img-edite.netlify.app/')}&quote=${encodeURIComponent(shareText)}`;
         
         // فتح نافذة مشاركة فيسبوك
-        window.open(shareUrl, 'facebook-share', 'width=580,height=296');
+        window.open(fbShareUrl, 'facebook-share', 'width=580,height=296');
+        
     } catch (error) {
         console.error('خطأ في المشاركة:', error);
-        alert('حدث خطأ أثناء محاولة المشاركة. الرجاء المحاولة مرة أخرى.');
+        alert('عذراً، حدث خطأ أثناء محاولة المشاركة. يرجى المحاولة مرة أخرى.');
     }
 }
 
