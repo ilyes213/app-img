@@ -277,6 +277,16 @@ function downloadCard() {
     link.click();
 }
 
+// إضافة دالة مشاركة على فيسبوك
+function shareOnFacebook() {
+    // الحصول على رابط الصفحة الحالية
+    const url = window.location.href;
+    
+    // فتح نافذة مشاركة فيسبوك
+    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    window.open(shareUrl, 'facebook-share', 'width=580,height=296');
+}
+
 // محتوى الصفحات المنبثقة
 const pageContents = {
     privacy: {
