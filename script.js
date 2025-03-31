@@ -285,11 +285,8 @@ async function shareOnFacebook() {
         // الحصول على نوع البطاقة والاسم
         const template = document.getElementById('templateSelect').value;
         const name = document.getElementById('nameInput').value;
-        
-        // تحويل الكانفاس إلى صورة
-        const imageUrl = canvas.toDataURL('image/png');
-        
-        // إنشاء نص المشاركة حسب نوع البطاقة
+
+        // إنشاء نص المشاركة
         let shareText;
         switch(template) {
             case 'promotion':
@@ -303,8 +300,7 @@ async function shareOnFacebook() {
                 break;
         }
         
-        // إضافة رابط الموقع
-        shareText += "\n✨ صمم بطاقتك الخاصة مجاناً:\n";
+        shareText += "✨ صمم بطاقتك الخاصة مجاناً:\n";
         shareText += "https://img-edite.netlify.app/";
 
         // إضافة Facebook SDK إذا لم يكن موجوداً
@@ -321,28 +317,33 @@ async function shareOnFacebook() {
                 window.fbAsyncInit = function() {
                     FB.init({
                         appId: '1807101829859344',
-                        version: 'v18.0',
-                        xfbml: true
+                        version: 'v18.0'
                     });
                 };
             });
         }
 
-        // استخدام Facebook SDK للمشاركة
+        // تحويل الكانفاس إلى صورة
+        const imageData = canvas.toDataURL('image/png').split(',')[1];
+
+        // مشاركة على فيسبوك
         FB.ui({
             method: 'feed',
+            name: 'صانع البطاقات السحري',
             link: 'https://img-edite.netlify.app/',
-            picture: imageUrl,
+            picture: canvas.toDataURL('image/png'),
             caption: 'صانع البطاقات السحري',
             description: shareText,
-            hashtag: '#صانع_البطاقات_السحري'
+            message: shareText
         }, function(response) {
             if (response && !response.error_message) {
                 alert('تمت المشاركة بنجاح! 🎉');
             } else {
-                // إذا فشلت المشاركة المباشرة، نستخدم الطريقة البديلة
-                const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?` +
-                    `u=${encodeURIComponent('https://img-edite.netlify.app/')}` +
+                // إذا فشلت المشاركة، نستخدم الطريقة البديلة
+                const fbShareUrl = `https://www.facebook.com/dialog/share?` +
+                    `app_id=1807101829859344` +
+                    `&display=popup` +
+                    `&href=${encodeURIComponent('https://img-edite.netlify.app/')}` +
                     `&quote=${encodeURIComponent(shareText)}` +
                     `&hashtag=${encodeURIComponent('#صانع_البطاقات_السحري')}`;
 
